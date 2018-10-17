@@ -529,7 +529,11 @@ RunInfo BoundFunction::PrepareToRun() const {
     throw std::runtime_error("Unable to run function with unbound inputs");
   }
   if (num_outputs() != 0) {
-    throw std::runtime_error("Unable to run function with unbound outputs");
+    std::ostringstream err;
+    err << "Unable to run function with unbound outputs";
+    err << ". Only " << std::to_string(out_bound_.size()) << " outputs bound ";
+    err << "out of " << std::to_string(prog_.outputs.size()) << " total outputs.";
+    throw std::runtime_error(err.str());
   }
 
   RunInfo r;
