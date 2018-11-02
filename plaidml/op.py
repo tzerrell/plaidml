@@ -78,6 +78,7 @@ class PoolMode(Enum):
     MAX = 1
     AVG = 2
 
+
 def _extend_pads(pads, rank):
     """Extends a padding list to match the necessary rank.
     
@@ -1008,9 +1009,15 @@ class Pool(tile.Operation):
     A standard ML pooling operator. Handles both MAX & AVG
     """
 
-    def __init__(self, data, mode, kernel_shape, strides, pads=None, padding=AutoPadding.EXPLICIT,
-            data_format=PoolDataFormat.NCX):
-        print("Received kernel shape: ", kernel_shape) # TODO: Remove
+    def __init__(self,
+                 data,
+                 mode,
+                 kernel_shape,
+                 strides,
+                 pads=None,
+                 padding=AutoPadding.EXPLICIT,
+                 data_format=PoolDataFormat.NCX):
+        print("Received kernel shape: ", kernel_shape)  # TODO: Remove
         rank = data.shape.ndims - 2
         pads = _extend_pads(pads, rank)
         if not strides:
@@ -1063,7 +1070,8 @@ class Pool(tile.Operation):
             ones_read_idxs = ['0'] + in_spatial_idxs + ['0']
             count_dims = ['1'] + out_spatial_dims + ['1']
             count_idxs = ['0'] + out_spatial_idxs + ['0']
-            num_out_shape = list(data.shape.dims[0:1]) + num_out_spatial_shape + list(data.shape.dims[rank+1:rank+2])
+            num_out_shape = list(data.shape.dims[0:1]) + num_out_spatial_shape + list(
+                data.shape.dims[rank + 1:rank + 2])
         else:
             raise ValueError('Invalid data_format')
 
@@ -1083,7 +1091,8 @@ class Pool(tile.Operation):
                 ones_read_idxs=', '.join(ones_read_idxs),
                 cout_idxs=', '.join(count_idxs),
                 cout_dims=', '.join(count_dims),
-                pool_bounds=', '.join(['a{} < {}'.format(i, kernel_shape[i]) for i in range(rank)]),
+                pool_bounds=', '.join(
+                    ['a{} < {}'.format(i, kernel_shape[i]) for i in range(rank)]),
             )
             denom_divide_code = """
             O = S / Count;"""
@@ -1117,9 +1126,9 @@ class Pool(tile.Operation):
 
         outshape = tile.Shape(data.shape.dtype, num_out_shape)
 
-        print("Code: ", code) # TODO: Remove
-        print("Pads: ", pads) # TODO: Remove
-        print("Producing outshape: ", outshape) # TODO: Remove
+        print("Code: ", code)  # TODO: Remove
+        print("Pads: ", pads)  # TODO: Remove
+        print("Producing outshape: ", outshape)  # TODO: Remove
 
         super(Pool, self).__init__(code, input_tensors, [('O', outshape)])
 
@@ -1127,8 +1136,20 @@ class Pool(tile.Operation):
 pool = Pool.function
 
 
-def average_pool(data, kernel_shape, strides, pads=None, padding=AutoPadding.EXPLICIT, data_format=PoolDataFormat.NCX):
-    pool(data=data, mode=PoolMode.AVG, kernel_shape=kernel_shape, pads=pads, strides=strides, padding=padding, data_format=data_format)
+def average_pool(data,
+                 kernel_shape,
+                 strides,
+                 pads=None,
+                 padding=AutoPadding.EXPLICIT,
+                 data_format=PoolDataFormat.NCX):
+    pool(
+        data=data,
+        mode=PoolMode.AVG,
+        kernel_shape=kernel_shape,
+        pads=pads,
+        strides=strides,
+        padding=padding,
+        data_format=data_format)
 
 
 class BinaryCrossentropy(tile.Operation):
@@ -2056,8 +2077,20 @@ maximum = tile.maximum
 
 
 # TODO: Fix pads to None
-def max_pool(data, kernel_shape, strides, pads=[], padding=AutoPadding.EXPLICIT, data_format=PoolDataFormat.NCX):
-    pool(data=data, mode=PoolMode.MAX, kernel_shape=kernel_shape, pads=pads, strides=strides, padding=padding, data_format=data_format)
+def max_pool(data,
+             kernel_shape,
+             strides,
+             pads=[],
+             padding=AutoPadding.EXPLICIT,
+             data_format=PoolDataFormat.NCX):
+    pool(
+        data=data,
+        mode=PoolMode.MAX,
+        kernel_shape=kernel_shape,
+        pads=pads,
+        strides=strides,
+        padding=padding,
+        data_format=data_format)
 
 
 class Mean(tile.Operation):
