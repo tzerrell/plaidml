@@ -1002,7 +1002,13 @@ def pool(x, pool_size, strides=None, padding='valid', data_format=None, pool_mod
         padding = _AUTO_PAD[padding]
     except KeyError:
         six.raise_from(ValueError('Unrecognized padding: {}'.format(padding)), None)
-    return op.pool(data=x, mode=pool_mode, kernel_shape=pool_size, strides=strides, padding=padding, data_format=data_format)
+    return op.pool(
+        data=x,
+        mode=pool_mode,
+        kernel_shape=pool_size,
+        strides=strides,
+        padding=padding,
+        data_format=data_format)
 
 
 def pool2d(x, pool_size, strides=(1, 1), padding='valid', data_format=None, pool_mode='max'):
