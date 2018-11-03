@@ -1003,7 +1003,6 @@ argmax = ArgMax.function
 
 
 # TODO: Order everything correctly
-# TODO: Handle pads reorder on calling things
 class Pool(tile.Operation):
     """
     A standard ML pooling operator. Handles both MAX & AVG
@@ -1017,7 +1016,6 @@ class Pool(tile.Operation):
                  pads=None,
                  padding=AutoPadding.EXPLICIT,
                  data_format=PoolDataFormat.NCX):
-        print("Received kernel shape: ", kernel_shape)  # TODO: Remove
         rank = data.shape.ndims - 2
         pads = _extend_pads(pads, rank)
         if not strides:
@@ -1117,10 +1115,6 @@ class Pool(tile.Operation):
             pool_bounds=', '.join(['a{} < {}'.format(i, kernel_shape[i]) for i in range(rank)]))
 
         outshape = tile.Shape(data.shape.dtype, num_out_shape)
-
-        print("Code: ", code)  # TODO: Remove
-        print("Pads: ", pads)  # TODO: Remove
-        print("Producing outshape: ", outshape)  # TODO: Remove
 
         super(Pool, self).__init__(code, input_tensors, [('O', outshape)])
 
@@ -2068,11 +2062,10 @@ def max_reduce(x, axes=None, keepdims=False):
 maximum = tile.maximum
 
 
-# TODO: Fix pads to None
 def max_pool(data,
              kernel_shape,
              strides,
-             pads=[],
+             pads=None,
              padding=AutoPadding.EXPLICIT,
              data_format=PoolDataFormat.NCX):
     pool(
