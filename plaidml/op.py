@@ -1008,7 +1008,7 @@ def average_pool(data,
                  pads=None,
                  padding=AutoPadding.EXPLICIT,
                  data_format=PoolDataFormat.NCX):
-    pool(
+    return pool(
         data=data,
         mode=PoolMode.AVG,
         kernel_shape=kernel_shape,
@@ -1948,7 +1948,7 @@ def max_pool(data,
              pads=None,
              padding=AutoPadding.EXPLICIT,
              data_format=PoolDataFormat.NCX):
-    pool(
+    return pool(
         data=data,
         mode=PoolMode.MAX,
         kernel_shape=kernel_shape,
