@@ -1054,22 +1054,14 @@ class Pool(tile.Operation):
             in_idxs = ['n', 'c'] + in_spatial_idxs
             out_dims = ['N', 'C'] + out_spatial_dims
             out_idxs = ['n', 'c'] + out_spatial_idxs
-            ones_dims = ['N', 'C'] + in_spatial_dims
             ones_write_idxs = ['n', 'c'] + ['o{}'.format(i) for i in range(rank)]
-            ones_read_idxs = ['n', 'c'] + in_spatial_idxs
-            count_dims = ['N', 'C'] + out_spatial_dims
-            count_idxs = ['n', 'c'] + out_spatial_idxs
             num_out_shape = list(data.shape.dims[0:2]) + num_out_spatial_shape
         elif data_format == PoolDataFormat.NXC:
             in_dims = ['N'] + in_spatial_dims + ['C']
             in_idxs = ['n'] + in_spatial_idxs + ['c']
             out_dims = ['N'] + out_spatial_dims + ['C']
             out_idxs = ['n'] + out_spatial_idxs + ['c']
-            ones_dims = ['N'] + in_spatial_dims + ['C']
             ones_write_idxs = ['n'] + ['o{}'.format(i) for i in range(rank)] + ['c']
-            ones_read_idxs = ['n'] + in_spatial_idxs + ['c']
-            count_dims = ['N'] + out_spatial_dims + ['C']
-            count_idxs = ['n'] + out_spatial_idxs + ['c']
             num_out_shape = list(data.shape.dims[0:1]) + num_out_spatial_shape + list(
                 data.shape.dims[rank + 1:rank + 2])
         else:
@@ -1087,10 +1079,10 @@ class Pool(tile.Operation):
             Ones[{ones_write_idxs} : {ones_dims}] = =(One[]);
             Count[{cout_idxs} : {cout_dims}] = +(Ones[{ones_read_idxs}]), {pool_bounds};""".format(
                 ones_write_idxs=', '.join(ones_write_idxs),
-                ones_dims=', '.join(ones_dims),
-                ones_read_idxs=', '.join(ones_read_idxs),
-                cout_idxs=', '.join(count_idxs),
-                cout_dims=', '.join(count_dims),
+                ones_dims=', '.join(in_dims),
+                ones_read_idxs=', '.join(in_idxs),
+                cout_idxs=', '.join(out_idxs),
+                cout_dims=', '.join(out_dims),
                 pool_bounds=', '.join(
                     ['a{} < {}'.format(i, kernel_shape[i]) for i in range(rank)]),
             )
