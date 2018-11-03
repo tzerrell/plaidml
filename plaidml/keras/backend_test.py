@@ -944,15 +944,13 @@ class TestBackendOps(unittest.TestCase):
             b.pool2d(x, (3, 3), strides=(2, 2), pool_mode='max', padding='same')
         ]
 
-    @opTest(
-        [
-            [m(3, 3, 4, 5, 2)],
-            #[m(1, 5, 4, 7, 1)],
-        ],
-        skip_theano=True)
+    @opTest([
+        [m(3, 3, 4, 5, 2)],
+        [m(1, 5, 4, 7, 1)],
+    ], skip_theano=True)
     def testPool3D(self, b, x):
         return [
-            #b.pool3d(x, (1, 2, 2), strides=(2, 1, 2), pool_mode='max', padding='valid'),
+            b.pool3d(x, (1, 2, 2), strides=(2, 1, 2), pool_mode='max', padding='valid'),
             b.pool3d(x, (2, 2, 3), strides=(2, 3, 1), pool_mode='avg', padding='same'),
         ]
 
